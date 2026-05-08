@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/login', [LoginController::class, 'create'])
+    ->name('login');
+Route::post('/login', [LoginController::class, 'store']);
+Route::post('/logout', [LoginController::class, 'destroy'])
+    ->name('logout');
+
+// Route::get('/verify-email', function () {
+//     return view('auth.verify-email');
+// })->middleware('auth')->name('verification.notice');
+
+Route::get('/verify-email', function () {
+    return view('auth.verify-email');
+})->name('verification.notice');
