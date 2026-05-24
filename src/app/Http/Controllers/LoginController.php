@@ -34,7 +34,7 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect('/');
+        return redirect('/attendance');
     }
 
     public function destroy()

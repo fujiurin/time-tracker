@@ -1,0 +1,103 @@
+body {
+    background: #f0eff2;
+}
+
+.list-container {
+    width: 90%;
+    max-width: 1300px;
+    margin: 60px auto;
+}
+
+.page-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    padding-left: 18px;
+    border-left: 8px solid #000;
+}
+
+.month-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #fff;
+    border-radius: 8px;
+
+    padding: 12px 30px;
+    margin-bottom: 38px;
+}
+
+.month-nav a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #5c5a5a;
+    letter-spacing: 2px;
+}
+
+.month-picker {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.month-picker i {
+    font-size: 22px;
+    color: #000;
+}
+
+.month-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #000;
+    letter-spacing: 1px;
+}
+
+.month-picker input[type="month"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 12px 10px;
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 18px;
+    color: #5c5a5a;
+    letter-spacing: 1px;
+}
+
+th {
+    border-bottom: 5px solid #f0eff2;
+}
+
+td {
+    text-align: center;
+    border-bottom: 3px solid #f0eff2;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #fafafa;
+}
+
+td:last-child {
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+}

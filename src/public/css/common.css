@@ -11,12 +11,6 @@ body {
     line-height: 1.6;
 }
 
-main {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
 a {
     text-decoration: none;
     color: inherit;

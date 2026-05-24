@@ -11,9 +11,9 @@
             @auth
                 {{-- 一般ユーザー --}}
                 @if(Auth::user()->role === 'user')
-                    <li><a href="/attendance">勤怠</a></li>
-                    <li><a href="/attendance/list">勤怠一覧</a></li>
-                    <li><a href="/request">申請</a></li>
+                    <li><a href="{{ route('attendance.index') }}">勤怠</a></li>
+                    <li><a href="{{ route('attendance.list') }}">勤怠一覧</a></li>
+                    <li><a href="{{ route('user.correction.list') }}">申請</a></li>
                     <li>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
