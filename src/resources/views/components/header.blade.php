@@ -1,8 +1,6 @@
 <header class="header">
     <div class="header_logo">
-        <a href="{{ url('/') }}">
-            <img src="{{ asset('img/logo.png') }}" alt="Time Tracker">
-        </a>
+        <img src="{{ asset('img/logo.png') }}" alt="Time Tracker">
     </div>
 
     <nav class="header_nav">
@@ -23,9 +21,9 @@
 
                 {{-- 管理者ユーザー --}}
                 @elseif(Auth::user()->role === 'admin')
-                    <li><a href="/admin/attendance">勤怠一覧</a></li>
-                    <li><a href="/admin/staff">スタッフ一覧</a></li>
-                    <li><a href="/admin/request">申請一覧</a></li>
+                    <li><a href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+                    <li><a href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
+                    <li><a href="{{ route('admin.correction.list') }}">申請一覧</a></li>
                     <li>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf

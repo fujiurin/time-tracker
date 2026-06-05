@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Correction;
 use App\Models\CorrectionBreak;
@@ -12,8 +13,15 @@ use App\Http\Requests\CorrectionRequest;
 class CorrectionController extends Controller
 {
     // 勤怠修正申請
-    public function store(CorrectionRequest $request, Attendance $attendance)
+    public function store(CorrectionRequest $request)
     {
+        $attendance = Attendance::firstOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'work_date' => $request->work_date,
+            ]
+        );
+
         $correction = Correction::create([
             'user_id' => Auth::id(),
             'attendance_id' => $attendance->id,

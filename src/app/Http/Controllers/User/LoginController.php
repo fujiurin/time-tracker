@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UserLoginRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,10 +12,10 @@ class LoginController extends Controller
 {
     public function create()
     {
-        return view('auth.login');
+        return view('user.auth.login');
     }
 
-    public function store(LoginRequest $request)
+    public function store(UserLoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
 

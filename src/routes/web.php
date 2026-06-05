@@ -1,9 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\CorrectionController;
+use App\Http\Controllers\User\LoginController;
+use App\Http\Controllers\Admin\LoginController as AdminLoginController;
+use App\Http\Controllers\User\AttendanceController;
+use App\Http\Controllers\User\CorrectionController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\AttendanceRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,19 +20,15 @@ use App\Http\Controllers\CorrectionController;
 |
 */
 
+// 一般ユーザー
 Route::get('/login', [LoginController::class, 'create'])
     ->name('login');
 Route::post('/login', [LoginController::class, 'store']);
 Route::post('/logout', [LoginController::class, 'destroy'])
     ->name('logout');
-
-// Route::get('/verify-email', function () {
-//     return view('auth.verify-email');
-// })->middleware('auth')->name('verification.notice');
-
 Route::get('/verify-email', function () {
-    return view('auth.verify-email');
-})->name('verification.notice');
+    return view('user.auth.verify-email');})
+    ->name('verification.notice');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])
@@ -51,9 +51,37 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('attendance.detail');
 
     // 勤怠修正申請
-    Route::post('/attendance/{attendance}/correction', [CorrectionController::class, 'store'])
+    Route::post('/attendance/correction', [CorrectionController::class, 'store'])
         ->name('attendance.correction');
-    Route::get('/stamp_correction_request/list',
-    [CorrectionController::class, 'index'])
+    Route::get('/stamp_correction_request/list', [CorrectionController::class, 'index'])
         ->name('user.correction.list');
 });
+
+// 管理者
+Route::get('/admin/login', [AdminLoginController::class, 'create'])
+    ->name('admin.login');
+Route::post('/admin/login', [AdminLoginController::class, 'store'])
+    ->name('admin.login.store');
+
+Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])
+    ->name('admin.attendance.list');
+
+Route::get('/admin/attendance/staff/{id}', [StaffController::class, 'attendance'])
+    ->name('admin.staff.attendance');
+Route::get('/admin/attendance/staff/{id}/csv', [StaffController::class, 'exportCsv'])
+    ->name('admin.staff.attendance.csv');
+
+Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'show'])
+    ->name('admin.attendance.detail');
+Route::put('/admin/attendance/{id}', [AdminAttendanceController::class, 'update'])
+    ->name('admin.attendance.update');
+
+Route::get('/admin/staff/list', [StaffController::class, 'index'])
+    ->name('admin.staff.list');
+
+Route::get('/admin/stamp_correction_request/list', [AttendanceRequestController::class, 'index'])
+    ->name('admin.correction.list');
+Route::get('/admin/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceRequestController::class, 'show'])
+    ->name('admin.correction.approve');
+Route::post('/admin/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceRequestController::class, 'approve'])
+    ->name('admin.correction.approve.store');

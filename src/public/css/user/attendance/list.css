@@ -16,7 +16,8 @@ body {
     border-left: 8px solid #000;
 }
 
-.month-nav {
+.month-nav,
+.day-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,26 +29,30 @@ body {
     margin-bottom: 38px;
 }
 
-.month-nav a {
+.month-nav a,
+.day-nav a {
     font-size: 16px;
     font-weight: bold;
     color: #5c5a5a;
     letter-spacing: 2px;
 }
 
-.month-picker {
+.month-picker,
+.day-picker {
     position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.month-picker i {
+.month-picker i,
+.day-picker i {
     font-size: 22px;
     color: #000;
 }
 
-.month-text {
+.month-text,
+.day-text {
     font-size: 22px;
     font-weight: bold;
     color: #000;

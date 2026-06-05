@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
-@section('title','勤怠一覧（一般ユーザー）')
+@section('title','スタッフ別勤怠一覧（管理者）')
 
+<!-- ★後でCSSやる -->
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/user/attendance/list.css') }}">
 @endsection
@@ -9,10 +10,10 @@
 @section('content')
 
 <div class="list-container">
-    <h1 class="page-title">勤怠一覧</h1>
+    <h1 class="page-title">{{ $user->name }}さんの勤怠一覧</h1>
     
     <div class="month-nav">
-        <a href="{{ url('/attendance/list?month=' . $previousMonth) }}">← 前月</a>
+        <a href="{{ route('admin.staff.attendance', ['id' => $user->id, 'month' => $previousMonth]) }}">← 前月</a>
 
         <div class="month-picker">
             <i class="fa-regular fa-calendar"></i>
@@ -22,10 +23,10 @@
             <input
             type="month"
             value="{{ $currentMonth->format('Y-m') }}"
-            onchange="location.href='{{ url('/attendance/list') }}?month=' + this.value">
+            onchange="location.href='{{ route('admin.staff.attendance', ['id' => $user->id]) }}?month=' + this.value">
         </div>
 
-        <a href="{{ url('/attendance/list?month=' . $nextMonth) }}">翌月 →</a>
+        <a href="{{ route('admin.staff.attendance', ['id' => $user->id, 'month' => $nextMonth]) }}">翌月 →</a>
     </div>
 
     <table>
@@ -94,11 +95,24 @@
                     </td>
 
                     <td>
-                        <a href="{{ route('attendance.detail', ['id' => $attendance->id ?? 0,'date' => $date->format('Y-m-d')]) }}">詳細</a>
+                        <a href="{{ route('admin.attendance.detail', [
+                        'id' => $attendance->id ?? 0, 
+                        'date' => $date->format('Y-m-d'), 
+                        'user_id' => $user->id,
+                        ]) }}">詳細</a>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    <div class="csv-area">
+        <a href="{{ route('admin.staff.attendance.csv', [
+            'id' => $user->id,
+            'month' => $currentMonth->format('Y-m'),
+            ]) }}">
+            CSV出力
+        </a>
+    </div>
 </div>
 @endsection

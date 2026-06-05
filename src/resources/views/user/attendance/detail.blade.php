@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','勤怠詳細')
+@section('title','勤怠詳細（一般ユーザー）')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/user/attendance/detail.css') }}">
@@ -14,10 +14,16 @@
 
     <form 
     id="attendance-form"
-    action="{{ route('attendance.correction', $attendance->id) }}" 
+    action="{{ route('attendance.correction') }}" 
     method="post" 
     class="detail-content">
         @csrf
+
+        <input
+        type="hidden"
+        name="work_date"
+        value="{{ $attendance->work_date }}">
+
         <div class="detail-row">
             <p class="detail-label">名前</p>
             <p>{{ $attendance->user->name }}</p>

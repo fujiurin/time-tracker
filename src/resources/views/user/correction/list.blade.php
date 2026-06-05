@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','申請一覧')
+@section('title','申請一覧（一般ユーザー）')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/user/correction/list.css') }}">

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceBreak;
@@ -156,9 +157,22 @@ class AttendanceController extends Controller
             ->where('work_date', $request->date)
             ->first();
 
-        $isPending = $attendance->corrections()
-            ->where('status', 'pending')
-            ->exists();
+            if (!$attendance) {
+
+                $attendance = new Attendance();
+
+                $attendance->user = Auth::user();
+                $attendance->work_date = $request->date;
+                $attendance->breaks = collect();
+            }
+
+        $isPending = false;
+
+        if ($attendance->exists) {
+            $isPending = $attendance->corrections()
+                ->where('status', 'pending')
+                ->exists();
+        }
 
         return view('user.attendance.detail', compact(
             'attendance',
