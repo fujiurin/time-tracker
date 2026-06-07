@@ -1,3 +1,9 @@
+/* ========================================
+   勤怠一覧（一般ユーザー）
+   勤怠一覧（管理者）
+   スタッフ別勤怠一覧（管理者）
+   スタッフ一覧（管理者）
+======================================== */
 body {
     background: #f0eff2;
 }
@@ -101,8 +107,31 @@ tbody tr:hover {
     background: #fafafa;
 }
 
-td:last-child {
+td:last-child a {
     font-weight: bold;
     color: #000;
-    cursor: pointer;
+}
+
+/* CSV出力ボタン */
+.csv-area {
+    margin-top: 40px;
+    text-align: right;
+}
+
+.csv-area .submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 50px;
+    border-radius: 4px;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.csv-area .submit-button:hover {
+    opacity: 0.8;
 }

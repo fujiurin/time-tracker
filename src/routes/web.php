@@ -14,13 +14,13 @@ use App\Http\Controllers\Admin\AttendanceRequestController;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
+| Here is where you can register web routes GETfor your application. These
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
 */
 
-// 一般ユーザー
+// 一般ユーザーログイン
 Route::get('/login', [LoginController::class, 'create'])
     ->name('login');
 Route::post('/login', [LoginController::class, 'store']);
@@ -30,58 +30,70 @@ Route::get('/verify-email', function () {
     return view('user.auth.verify-email');})
     ->name('verification.notice');
 
+// 一般ユーザーミドルウェア
 Route::middleware(['auth', 'verified'])->group(function () {
+    // 勤怠登録
     Route::get('/attendance', [AttendanceController::class, 'index'])
         ->name('attendance.index');
-
-    // 勤務スタート
+    // 出勤
     Route::post('/attendance/start', [AttendanceController::class, 'start']);
-    // 勤務エンド
+    // 退勤
     Route::post('/attendance/end', [AttendanceController::class, 'end']);
-    // 休憩スタート
+    // 休憩開始
     Route::post('/attendance/break/start', [AttendanceController::class, 'breakStart']);
-    // 休憩エンド
+    // 休憩終了
     Route::post('/attendance/break/end', [AttendanceController::class, 'breakEnd']);
 
-    // 勤怠一覧画面
+    // 勤怠一覧
     Route::get('/attendance/list', [AttendanceController::class, 'list'])
         ->name('attendance.list');
-    // 勤怠詳細画面
+
+    // 勤怠詳細
     Route::get('/attendance/detail/{id}',[AttendanceController::class, 'show'])
         ->name('attendance.detail');
 
     // 勤怠修正申請
     Route::post('/attendance/correction', [CorrectionController::class, 'store'])
         ->name('attendance.correction');
+
+    // 勤怠申請一覧
     Route::get('/stamp_correction_request/list', [CorrectionController::class, 'index'])
         ->name('user.correction.list');
 });
 
-// 管理者
+// 管理者ログイン
 Route::get('/admin/login', [AdminLoginController::class, 'create'])
-    ->name('admin.login');
+        ->name('admin.login');
 Route::post('/admin/login', [AdminLoginController::class, 'store'])
-    ->name('admin.login.store');
+        ->name('admin.login.store');
 
-Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])
-    ->name('admin.attendance.list');
+// 管理者ミドルウェア
+Route::middleware(['auth', 'admin'])->group(function () {
+    // 勤怠一覧
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])
+        ->name('admin.attendance.list');
+    
+    // スタッフ別勤怠一覧
+    Route::get('/admin/attendance/staff/{id}', [StaffController::class, 'attendance'])
+        ->name('admin.staff.attendance');
+    Route::get('/admin/attendance/staff/{id}/csv', [StaffController::class, 'exportCsv'])
+        ->name('admin.staff.attendance.csv');
 
-Route::get('/admin/attendance/staff/{id}', [StaffController::class, 'attendance'])
-    ->name('admin.staff.attendance');
-Route::get('/admin/attendance/staff/{id}/csv', [StaffController::class, 'exportCsv'])
-    ->name('admin.staff.attendance.csv');
+    // 勤怠詳細
+    Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'show'])
+        ->name('admin.attendance.detail');
+    Route::put('/admin/attendance/{id}', [AdminAttendanceController::class, 'update'])
+        ->name('admin.attendance.update');
 
-Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'show'])
-    ->name('admin.attendance.detail');
-Route::put('/admin/attendance/{id}', [AdminAttendanceController::class, 'update'])
-    ->name('admin.attendance.update');
+    // スタッフ一覧
+    Route::get('/admin/staff/list', [StaffController::class, 'index'])
+        ->name('admin.staff.list');
 
-Route::get('/admin/staff/list', [StaffController::class, 'index'])
-    ->name('admin.staff.list');
-
-Route::get('/admin/stamp_correction_request/list', [AttendanceRequestController::class, 'index'])
-    ->name('admin.correction.list');
-Route::get('/admin/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceRequestController::class, 'show'])
-    ->name('admin.correction.approve');
-Route::post('/admin/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceRequestController::class, 'approve'])
-    ->name('admin.correction.approve.store');
+    // 申請・承認
+    Route::get('/admin/stamp_correction_request/list', [AttendanceRequestController::class, 'index'])
+        ->name('admin.correction.list');
+    Route::get('/admin/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceRequestController::class, 'show'])
+        ->name('admin.correction.approve');
+    Route::post('/admin/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceRequestController::class, 'approve'])
+        ->name('admin.correction.approve.store');
+});

@@ -9,21 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    // 管理者用ログイン画面表示
     public function create()
     {
         return view('admin.auth.login');
     }
 
+    // 管理者ログイン処理
     public function store(AdminLoginRequest $request)
     {
-
-        // 認証情報
         $credentials = $request->only('email', 'password');
 
-        // admin限定
         $credentials['role'] = 'admin';
 
-        // ログイン失敗
         if (!Auth::attempt($credentials)) {
 
             return back()->withErrors([
@@ -31,10 +29,8 @@ class LoginController extends Controller
             ])->withInput();
         }
 
-        // セッション再生成
         $request->session()->regenerate();
 
-        // 管理画面へ
         return redirect('/admin/attendance/list');
     }
 }

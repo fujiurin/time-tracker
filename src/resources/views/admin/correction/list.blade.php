@@ -3,14 +3,13 @@
 @section('title','申請一覧（管理者）')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/user/correction/list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/correction/list.css') }}">
 @endsection
 
 @section('content')
 <div class="list-container">
     <h1 class="page-title">申請一覧</h1>
 
-    <!-- ★タブ★ -->
     <div class="tab-menu">
         <a href="{{ route('admin.correction.list', ['status' => 'pending']) }}"
             class="{{ $status === 'pending' ? 'active' : '' }}">
@@ -23,7 +22,6 @@
         </a>
     </div>
 
-    <!-- ★テーブル★ -->
     <table class="correction-table">
         <tr>
             <th>状態</th>

@@ -12,29 +12,34 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+    // 勤怠一覧画面表示
     public function index(Request $request)
     {
-        // 日付取得
         $date = $request->date
             ? Carbon::parse($request->date)
             : Carbon::today();
 
-        // ユーザーとその日の勤怠
         $users = User::where('role', 'user')
+            ->whereHas('attendances', function ($query) use ($date) {
+                $query->whereDate('work_date', $date->toDateString())
+                    ->whereNotNull('clock_in');
+            })
             ->with([
                 'attendances' => function ($query) use ($date) {
-                    $query->whereDate('work_date', $date)
+                    $query->whereDate('work_date', $date->toDateString())
+                        ->whereNotNull('clock_in')
                         ->with('breaks');
                 }
-            ])                
+            ])
             ->get();
 
-        // ビューへ
         return view('admin.attendance.list', compact('users', 'date'));
     }
 
+    // 勤怠詳細画面表示
     public function show($id, Request $request)
     {
+        // 勤怠データが未登録の日でも詳細画面を表示できるようにする
         if ($id == 0) {
             $user = User::findOrFail($request->user_id);
 
@@ -54,6 +59,7 @@ class AttendanceController extends Controller
         return view('admin.attendance.detail', compact('attendance'));
     }
 
+    // 勤怠情報更新
     public function update(AdminAttendanceRequest $request, $id)
     {
         if ($id == 0) {
@@ -88,16 +94,17 @@ class AttendanceController extends Controller
 
                 if ($break) {
                     $break->update([
-                    'break_start' =>
-                        $attendance->work_date->format('Y-m-d')
-                        . ' ' . $breakData['break_start'],
+                        'break_start' =>
+                            $attendance->work_date->format('Y-m-d')
+                            . ' ' . $breakData['break_start'],
 
-                    'break_end' =>
-                        $attendance->work_date->format('Y-m-d')
-                        . ' ' . $breakData['break_end'],
+                        'break_end' =>
+                            $attendance->work_date->format('Y-m-d')
+                            . ' ' . $breakData['break_end'],
                     ]);
                 }
-            }else {
+            } else {
+
                 if (
                     !empty($breakData['break_start']) ||
                     !empty($breakData['break_end'])
@@ -112,7 +119,7 @@ class AttendanceController extends Controller
                         'break_end' =>
                             $attendance->work_date->format('Y-m-d')
                             . ' ' . $breakData['break_end'],
-                        ]);
+                    ]);
                 }
             }
         }

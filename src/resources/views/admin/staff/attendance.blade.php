@@ -2,9 +2,8 @@
 
 @section('title','スタッフ別勤怠一覧（管理者）')
 
-<!-- ★後でCSSやる -->
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/user/attendance/list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/list.css') }}">
 @endsection
 
 @section('content')
@@ -110,7 +109,8 @@
         <a href="{{ route('admin.staff.attendance.csv', [
             'id' => $user->id,
             'month' => $currentMonth->format('Y-m'),
-            ]) }}">
+            ]) }}"
+            class="submit-button">
             CSV出力
         </a>
     </div>

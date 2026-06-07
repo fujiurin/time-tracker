@@ -26,23 +26,21 @@ class CorrectionController extends Controller
             'user_id' => Auth::id(),
             'attendance_id' => $attendance->id,
             'requested_clock_in' =>
-            $attendance->work_date->format('Y-m-d') . ' ' . $request->requested_clock_in,
+                $attendance->work_date->format('Y-m-d') . ' ' . $request->requested_clock_in,
             'requested_clock_out' =>
-            $attendance->work_date->format('Y-m-d') . ' ' . $request->requested_clock_out,
+                $attendance->work_date->format('Y-m-d') . ' ' . $request->requested_clock_out,
             'note' => $request->note,
             'status' => 'pending',
         ]);
 
         foreach ($request->breaks as $break) {
-
             if ($break['break_start'] || $break['break_end']) {
-
                 CorrectionBreak::create([
                     'correction_id' => $correction->id,
                     'break_start' =>
-                    $attendance->work_date->format('Y-m-d') . ' ' . $break['break_start'],
+                        $attendance->work_date->format('Y-m-d') . ' ' . $break['break_start'],
                     'break_end' =>
-                    $attendance->work_date->format('Y-m-d') . ' ' . $break['break_end'],
+                        $attendance->work_date->format('Y-m-d') . ' ' . $break['break_end'],
                 ]);
             }
         }

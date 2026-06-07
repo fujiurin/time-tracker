@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class AttendanceRequestController extends Controller
 {
+    // 承認申請一覧表示
     public function index(Request $request)
     {
         $status = $request->query('status', 'pending');
@@ -25,28 +26,32 @@ class AttendanceRequestController extends Controller
         ));
     }
 
+    // 修正申請詳細表示
     public function show($attendance_correct_request_id)
     {
         $correctionRequest = Correction::with([
                 'user',
                 'attendance.breaks',
                 'correctionBreaks',
-            ])
-            ->findOrFail($attendance_correct_request_id);
+        ])->findOrFail($attendance_correct_request_id);
 
         return view('admin.correction.approve', compact('correctionRequest'));
     }
 
+    // 修正申請承認
     public function approve($attendance_correct_request_id)
     {
         $correctionRequest = Correction::with(['attendance.breaks', 'correctionBreaks'])
             ->findOrFail($attendance_correct_request_id);
 
         if ($correctionRequest->status === 'approved') {
-            return redirect()->route('admin.correction.list', ['status'=> 'approved']);
+            return redirect()->route('admin.correction.approve', [
+                'attendance_correct_request_id' => $correctionRequest->id,
+            ]);
         }
 
         DB::transaction(function () use ($correctionRequest) {
+
             $attendance = $correctionRequest->attendance;
 
             $attendance->update([
@@ -70,7 +75,8 @@ class AttendanceRequestController extends Controller
             ]);
         });
 
-        return redirect()
-            ->route('admin.correction.list', ['status' => 'approved']);
+        return redirect()->route('admin.correction.approve', [
+            'attendance_correct_request_id' => $correctionRequest->id,
+        ]);
     }
 }

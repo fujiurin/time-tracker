@@ -11,6 +11,7 @@ use Carbon\CarbonPeriod;
 
 class StaffController extends Controller
 {
+    // スタッフ一覧画面表示
     public function index()
     {
         $users = User::where('role', 'user')->get();
@@ -18,10 +19,10 @@ class StaffController extends Controller
         return view('admin.staff.index', compact('users'));
     }
 
+    // スタッフ別勤怠一覧画面表示
     public function attendance(Request $request, $id)
     {
         $user = User::findOrFail($id);
-
 
         $currentMonth = $request->month
             ? Carbon::parse($request->month)
@@ -56,71 +57,73 @@ class StaffController extends Controller
         ));
     }
 
+    // CSV出力
     public function exportCsv(Request $request, $id)
-{
-    $user = User::findOrFail($id);
+    {
+        $user = User::findOrFail($id);
 
-    $currentMonth = $request->month
-        ? Carbon::parse($request->month)
-        : Carbon::now();
+        $currentMonth = $request->month
+            ? Carbon::parse($request->month)
+            : Carbon::now();
 
-    $startOfMonth = $currentMonth->copy()->startOfMonth();
-    $endOfMonth = $currentMonth->copy()->endOfMonth();
+        $startOfMonth = $currentMonth->copy()->startOfMonth();
+        $endOfMonth = $currentMonth->copy()->endOfMonth();
 
-    $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
+        $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
 
-    $attendances = Attendance::with('breaks')
-        ->where('user_id', $user->id)
-        ->whereBetween('work_date', [
-            $startOfMonth->toDateString(),
-            $endOfMonth->toDateString(),
-        ])
-        ->get()
-        ->keyBy(function ($attendance) {
-            return Carbon::parse($attendance->work_date)->format('Y-m-d');
-        });
+        $attendances = Attendance::with('breaks')
+            ->where('user_id', $user->id)
+            ->whereBetween('work_date', [
+                $startOfMonth->toDateString(),
+                $endOfMonth->toDateString(),
+            ])
+            ->get()
+            ->keyBy(function ($attendance) {
+                return Carbon::parse($attendance->work_date)->format('Y-m-d');
+            });
 
-    $fileName = $user->name . '_' . $currentMonth->format('Y-m') . '_attendance.csv';
+        $fileName = $user->name . '_' . $currentMonth->format('Y-m') . '_attendance.csv';
 
-    $headers = [
-        'Content-Type' => 'text/csv',
-        'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-    ];
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ];
 
-    return response()->stream(function () use ($dates, $attendances) {
-        $handle = fopen('php://output', 'w');
+        return response()->stream(function () use ($dates, $attendances) {
+            $handle = fopen('php://output', 'w');
 
-        fwrite($handle, "\xEF\xBB\xBF");
-        fputcsv($handle, ['日付', '出勤', '退勤', '休憩', '合計']);
+            fwrite($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, ['日付', '出勤', '退勤', '休憩', '合計']);
 
-        foreach ($dates as $date) {
-            $attendance = $attendances[$date->format('Y-m-d')] ?? null;
+            foreach ($dates as $date) {
+                $attendance = $attendances[$date->format('Y-m-d')] ?? null;
 
-            $breakMinutes = 0;
-            if ($attendance) {
-                foreach ($attendance->breaks as $break) {
-                    if ($break->break_start && $break->break_end) {
-                        $breakMinutes += $break->break_start->diffInMinutes($break->break_end);
+                $breakMinutes = 0;
+                if ($attendance) {
+                    foreach ($attendance->breaks as $break) {
+                        if ($break->break_start && $break->break_end) {
+                            $breakMinutes += $break->break_start->diffInMinutes($break->break_end);
+                        }
                     }
                 }
+
+                $attendanceMinutes = 0;
+                if ($attendance && $attendance->clock_out) {
+                    $attendanceMinutes =
+                        $attendance->clock_in->diffInMinutes($attendance->clock_out) - $breakMinutes;
+                }
+
+                fputcsv($handle, [
+                    $date->format('Y/m/d'),
+                    $attendance && $attendance->clock_in 
+                        ? $attendance->clock_in->format('H:i') : '',
+                    $attendance && $attendance->clock_out ? $attendance->clock_out->format('H:i') : '',
+                    $breakMinutes > 0 ? sprintf('%02d:%02d', floor($breakMinutes / 60), $breakMinutes % 60) : '',
+                    $attendanceMinutes > 0 ? sprintf('%02d:%02d', floor($attendanceMinutes / 60), $attendanceMinutes % 60) : '',
+                ]);
             }
 
-            $attendanceMinutes = 0;
-            if ($attendance && $attendance->clock_out) {
-                $attendanceMinutes =
-                    $attendance->clock_in->diffInMinutes($attendance->clock_out) - $breakMinutes;
-            }
-
-            fputcsv($handle, [
-                $date->format('Y/m/d'),
-                $attendance && $attendance->clock_in ? $attendance->clock_in->format('H:i') : '',
-                $attendance && $attendance->clock_out ? $attendance->clock_out->format('H:i') : '',
-                $breakMinutes > 0 ? sprintf('%02d:%02d', floor($breakMinutes / 60), $breakMinutes % 60) : '',
-                $attendanceMinutes > 0 ? sprintf('%02d:%02d', floor($attendanceMinutes / 60), $attendanceMinutes % 60) : '',
-            ]);
-        }
-
-        fclose($handle);
-    }, 200, $headers);
-}
+            fclose($handle);
+        }, 200, $headers);
+    }
 }

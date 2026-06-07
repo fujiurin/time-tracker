@@ -1,10 +1,10 @@
 <header class="header">
-    <div class="header_logo">
+    <div class="header-logo">
         <img src="{{ asset('img/logo.png') }}" alt="Time Tracker">
     </div>
 
-    <nav class="header_nav">
-        <ul class="header_list">    
+    <nav class="header-nav">
+        <ul class="header-list">    
 
             @auth
                 {{-- 一般ユーザー --}}
@@ -15,7 +15,7 @@
                     <li>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button class="header_logout" type="submit">ログアウト</button>
+                            <button class="header-logout" type="submit">ログアウト</button>
                         </form>
                     </li>
 
@@ -27,7 +27,7 @@
                     <li>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button class="header_logout" type="submit">ログアウト</button>
+                            <button class="header-logout" type="submit">ログアウト</button>
                         </form>
                     </li>
                 @endif

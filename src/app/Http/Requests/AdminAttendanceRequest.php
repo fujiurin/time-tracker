@@ -50,12 +50,10 @@ class AdminAttendanceRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-
             $clockIn = $this->clock_in;
             $clockOut = $this->clock_out;
 
             foreach ($this->breaks ?? [] as $index => $break) {
-
                 // 休憩開始が勤務時間外
                 if (
                     !empty($break['break_start']) &&
@@ -69,7 +67,6 @@ class AdminAttendanceRequest extends FormRequest
                         '休憩時間が不適切な値です'
                     );
                 }
-
                 // 休憩終了が退勤後
                 elseif (
                     !empty($break['break_end']) && $break['break_end'] > $clockOut

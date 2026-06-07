@@ -3,14 +3,13 @@
 @section('title','申請一覧（一般ユーザー）')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/user/correction/list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/correction/list.css') }}">
 @endsection
 
 @section('content')
 <div class="list-container">
     <h1 class="page-title">申請一覧</h1>
 
-    <!-- ★タブ★ -->
     <div class="tab-menu">
         <a
         href="{{ route('user.correction.list', ['status' => 'pending']) }}"
@@ -25,7 +24,6 @@
         </a>
     </div>
 
-    <!-- ★テーブル★ -->
     <table class="correction-table">
         <tr>
             <th>状態</th>
@@ -47,7 +45,7 @@
             </td>
 
             <td>
-                {{ \Carbon\Carbon::parse($correction->attendance->work_date)->format('Y/m/d') }}
+                {{ $correction->attendance->work_date->format('Y/m/d') }}
             </td>
 
             <td>
@@ -61,9 +59,7 @@
             <td>
                 <a href="{{ route('attendance.detail', [
                 'id' => $correction->attendance->id,
-                'date' => \Carbon\Carbon::parse(
-                $correction->attendance->work_date
-                )->format('Y-m-d')
+                'date' => $correction->attendance->work_date->format('Y-m-d')
                 ]) }}">
                 詳細
                 </a>

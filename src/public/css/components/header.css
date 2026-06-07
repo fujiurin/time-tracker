@@ -1,3 +1,6 @@
+/* ========================================
+   共通ヘッダー（一般ユーザー・管理者）
+======================================== */
 .header {
     display: flex;
     justify-content: space-between;
@@ -12,17 +15,17 @@
     z-index: 1000;
 }
 
-.header_logo img {
+.header-logo img {
     height: 40px;
     width: auto;
     display: block;
 }
 
-.header_nav {
+.header-nav {
     display: flex;
 }
 
-.header_list {
+.header-list {
     display: flex;
     align-items: center;
     list-style: none;
@@ -30,25 +33,25 @@
     padding: 0;
 }
 
-.header_list li {
+.header-list li {
     margin-right: 30px;
 }
 
-.header_list li:last-child {
+.header-list li:last-child {
     margin-right: 0;
 }
 
-.header_list a {
+.header-list a {
     color: #fff;
     text-decoration: none;
     transition: 0.2s;
 }
 
-.header_list a:hover {
+.header-list a:hover {
     opacity: 0.7;
 }
 
-.header_logout {
+.header-logout {
     background: none;
     border: none;
     padding: 0;
@@ -60,6 +63,6 @@
     transition: 0.2s;
 }
 
-.header_logout:hover {
+.header-logout:hover {
     opacity: 0.7;
 }

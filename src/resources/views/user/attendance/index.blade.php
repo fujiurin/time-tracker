@@ -3,7 +3,7 @@
 @section('title','勤怠登録画面')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('/css/user/attendance/index.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/index.css') }}">
 @endsection
 
 @section('content')
@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<!-- ★これはJS -->
+<!-- JS -->
 <script>
 const now = new Date();
 

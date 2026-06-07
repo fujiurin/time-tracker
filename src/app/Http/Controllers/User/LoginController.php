@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    // ログイン画面表示
     public function create()
     {
         return view('user.auth.login');
     }
 
+    // ログイン処理
     public function store(UserLoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
@@ -38,9 +40,13 @@ class LoginController extends Controller
         return redirect('/attendance');
     }
 
-    public function destroy()
+    // ログアウト処理
+    public function destroy(Request $request)
     {
         Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/login');
     }

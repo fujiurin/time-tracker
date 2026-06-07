@@ -1,3 +1,8 @@
+/* ========================================
+   勤怠詳細画面（管理者・一般ユーザー共通）
+   修正申請承認（管理者）
+======================================== */
+
 /* 全体 */
 body {
     background: #f0eff2;
@@ -18,7 +23,7 @@ body {
     border-left: 8px solid #000;
 }
 
-/* 詳細 */
+/* 詳細エリア */
 .detail-content {
     background-color: #fff;
     border-radius: 8px;
@@ -58,7 +63,7 @@ body {
     gap: 15px;
 }
 
-/* 時計の絵文字消す */
+/* time入力のアイコン非表示 */
 input[type="time"]::-webkit-calendar-picker-indicator {
     display: none;
 }
@@ -97,16 +102,25 @@ textarea {
     text-align: right;
 }
 
-.submit-button {
+.submit-button,
+.approved-button {
     width: 130px;
     height: 50px;
     border: none;
-    border-radius: 6px;
-    background-color: #000;
+    border-radius: 4px;
     color: #fff;
     font-size: 16px;
     font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.submit-button {
+    background-color: #000;
     cursor: pointer;
+}
+
+.approved-button {
+    background-color: #696969;
 }
 
 .submit-button:hover {

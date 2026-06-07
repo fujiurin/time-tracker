@@ -15,6 +15,7 @@ use App\Http\Requests\CorrectionRequest;
 
 class AttendanceController extends Controller
 {
+    // 勤怠登録画面表示
     public function index()
     {
         $attendance = Attendance::where('user_id', Auth::id())
@@ -24,19 +25,13 @@ class AttendanceController extends Controller
         $status = '勤務外';
 
         if ($attendance) {
-
             $latestBreak = $attendance->breaks()->latest()->first();
 
             if ($attendance->clock_out) {
-
                 $status = '退勤済';
-
             } elseif ($latestBreak && !$latestBreak->break_end) {
-
                 $status = '休憩中';
-
             } else {
-
                 $status = '出勤中';
             }
         }
@@ -44,14 +39,13 @@ class AttendanceController extends Controller
         return view('user.attendance.index', compact('attendance', 'status'));
     }
 
+    // 出勤登録
     public function start()
     {
-        // ★勤怠押してるかどうかを確認
         $attendance = Attendance::where('user_id', Auth::id())
             ->where('work_date', today())
             ->first();
 
-        // ★まだ押してなかったらcreate
         if (!$attendance) {
             Attendance::create([
                 'user_id' => Auth::id(),
@@ -63,14 +57,14 @@ class AttendanceController extends Controller
         return redirect('/attendance');
     }
 
+    // 退勤登録
     public function end()
     {
-        // ★勤怠押してるかどうか確認
         $attendance = Attendance::where('user_id', Auth::id())
             ->where('work_date', today())
-            ->first();   
+            ->first();
 
-        if($attendance && !$attendance->clock_out) {
+        if ($attendance && !$attendance->clock_out) {
             $attendance->clock_out = now();
             $attendance->save();
         }
@@ -78,6 +72,7 @@ class AttendanceController extends Controller
         return redirect('/attendance');
     }
 
+    // 休憩開始登録
     public function breakStart()
     {
         $attendance = Attendance::where('user_id', Auth::id())
@@ -94,6 +89,7 @@ class AttendanceController extends Controller
         return redirect('/attendance');
     }
 
+    // 休憩終了登録
     public function breakEnd()
     {
         $attendance = Attendance::where('user_id', Auth::id())
@@ -101,13 +97,11 @@ class AttendanceController extends Controller
             ->first();
 
         if ($attendance) {
-
             $latestBreak = $attendance->breaks()
                 ->latest()
                 ->first();
 
             if ($latestBreak && !$latestBreak->break_end) {
-
                 $latestBreak->break_end = now();
                 $latestBreak->save();
             }
@@ -124,7 +118,6 @@ class AttendanceController extends Controller
             : Carbon::now();
 
         $startOfMonth = $currentMonth->copy()->startOfMonth();
-
         $endOfMonth = $currentMonth->copy()->endOfMonth();
 
         $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
@@ -135,8 +128,7 @@ class AttendanceController extends Controller
             ->with('breaks')
             ->get()
             ->keyBy(fn ($a) => optional($a->work_date)->format('Y-m-d'));
-            
-            
+
         $previousMonth = $currentMonth->copy()->subMonth()->format('Y-m');
         $nextMonth = $currentMonth->copy()->addMonth()->format('Y-m');
         
@@ -157,14 +149,13 @@ class AttendanceController extends Controller
             ->where('work_date', $request->date)
             ->first();
 
-            if (!$attendance) {
-
-                $attendance = new Attendance();
-
-                $attendance->user = Auth::user();
-                $attendance->work_date = $request->date;
-                $attendance->breaks = collect();
-            }
+        // 勤怠データがない日でも詳細画面を表示できるようにする
+        if (!$attendance) {
+            $attendance = new Attendance();
+            $attendance->user = Auth::user();
+            $attendance->work_date = $request->date;
+            $attendance->breaks = collect();
+        }
 
         $isPending = false;
 

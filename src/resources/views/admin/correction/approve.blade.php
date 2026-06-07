@@ -3,15 +3,15 @@
 @section('title','修正申請承認（管理者）')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/user/attendance/detail.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/detail.css') }}">
 @endsection
 
 @section('content')
 
-    @php
-        $attendance = $correctionRequest->attendance;
-        $isPending = $correctionRequest->status === 'pending';
-    @endphp
+@php
+    $attendance = $correctionRequest->attendance;
+    $isPending = $correctionRequest->status === 'pending';
+@endphp
 
 <div class="detail-container">
     
@@ -71,9 +71,12 @@
             @if($isPending)
                 <button 
                 type="submit" 
-                class="submit-button" >承認</button>
+                class="submit-button">承認</button>
             @else
-                <p class="pending-message">承認済み</p>
+                <button 
+                type="button" 
+                class="approved-button" 
+                disabled>承認済み</button>
             @endif
         </div>
     </form>

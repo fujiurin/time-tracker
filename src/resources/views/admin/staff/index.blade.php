@@ -2,16 +2,15 @@
 
 @section('title','スタッフ一覧（管理者）')
 
-<!-- ★後でCSSやる -->
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/user/attendance/list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/list.css') }}">
 @endsection
 
 @section('content')
-<div class="attendance-list">
-    <h1 class="attendance-list__title">スタッフ一覧</h1>
+<div class="list-container">
+    <h1 class="page-title">スタッフ一覧</h1>
 
-    <table class="attendance-list__table">
+    <table>
         <thead>
             <tr>
                 <th>名前</th>
