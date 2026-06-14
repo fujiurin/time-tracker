@@ -33,7 +33,7 @@ body {
 .detail-row {
     display: flex;
     align-items: center;
-    padding: 20px 60px;
+    padding: 20px 60px 36px;
     border-bottom: 2px solid #f0eff2;
     position: relative;
 }
@@ -137,7 +137,6 @@ textarea {
     left: 220px;
     bottom: 8px;
     color: #ff0000;
-    font-size: 14px;
 }
 
 /* disabled */
