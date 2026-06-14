@@ -109,5 +109,11 @@ UserAuthTest.php
 UserCorrectionTest.php  
 ・テスト実行　php artisan test
 
+## テストケース、日時取得機能について
+日時はJavaScriptの `Date` オブジェクトを用いて取得し、
+画面上にリアルタイムで表示している。
+そのため本項目はバックエンドの単体テストではなく、
+UI表示確認（ブラウザテスト）にて動作確認を実施している。
+
 ## ER図 
 ![ER図](src/public/docs/ER.drawio.png)
