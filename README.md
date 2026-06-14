@@ -40,4 +40,4 @@ DB_PASSWORD=laravel_pass
 ・Mailhog（メール確認）  
 
 ## ER図 
-![ER図](docs/time-tracker-ER図.drawio.png)
+![ER図](src/public/docs/ER.drawio.png)
