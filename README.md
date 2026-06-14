@@ -35,7 +35,7 @@ DB_PASSWORD=laravel_pass
 
 ## 使用技術
 ・PHP 8.4.13  
-・MySQL 8.0.26
+・MySQL 8.0.26　
 ・Laravel 8.83.29 
 
 ## URL
