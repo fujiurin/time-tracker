@@ -35,13 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // 勤怠登録
     Route::get('/attendance', [AttendanceController::class, 'index'])
         ->name('attendance.index');
-    // 出勤
     Route::post('/attendance/start', [AttendanceController::class, 'start']);
-    // 退勤
     Route::post('/attendance/end', [AttendanceController::class, 'end']);
-    // 休憩開始
     Route::post('/attendance/break/start', [AttendanceController::class, 'breakStart']);
-    // 休憩終了
     Route::post('/attendance/break/end', [AttendanceController::class, 'breakEnd']);
 
     // 勤怠一覧
