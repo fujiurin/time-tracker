@@ -43,6 +43,9 @@ DB_PASSWORD=laravel_pass
 ・phpMyAdmin：http://localhost:8080/  
 ・mailhog：http://localhost:8025/  
 
+## ER図 
+![ER図](src/public/docs/ER.drawio.png)
+
 ## 単体テスト
 ・mysql -u root -p  
 ・> CREATE DATABASE demo_test;  
@@ -114,6 +117,3 @@ UserCorrectionTest.php
 画面上にリアルタイムで表示している。
 そのため本項目はバックエンドの単体テストではなく、
 UI表示確認（ブラウザテスト）にて動作確認を実施している。
-
-## ER図 
-![ER図](src/public/docs/ER.drawio.png)
